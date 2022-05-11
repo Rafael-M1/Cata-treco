@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "359206022790",
+    "project_id": "cata-treco",
+    "storage_bucket": "cata-treco.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359206022790:android:8ff3b94a63dadecac5eb07",
+        "android_client_info": {
+          "package_name": "com.example.cata_treco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "359206022790-vmtausbgi96o6s0t9g8nq5a4j07rnr3j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYbjCjnEyQZLskoi6ePaynskgTkWgCzCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "359206022790-vmtausbgi96o6s0t9g8nq5a4j07rnr3j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
