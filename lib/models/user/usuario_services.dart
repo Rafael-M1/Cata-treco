@@ -8,7 +8,12 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class UsuarioServices {
-  Usuario? usuario;
+  static Usuario? usuario;
+
+  Usuario? get getUsuario {
+    return usuario;
+  }
+
   //Método para realizar a autenticação no firebase com email e senha
   Future<void> signIn(
     Usuario usuario, {
@@ -19,8 +24,8 @@ class UsuarioServices {
       User? user = (await _auth.signInWithEmailAndPassword(
               email: usuario.email!, password: usuario.password!))
           .user;
-      this.usuario = usuario;
-      this.usuario!.id = user!.uid;
+      usuario = usuario;
+      usuario.id = user!.uid;
       //Função Callback
       onSuccess!();
     } on PlatformException catch (e) {
@@ -38,12 +43,12 @@ class UsuarioServices {
       User? user = (await _auth.createUserWithEmailAndPassword(
               email: usuario.email!, password: usuario.password!))
           .user;
-      this.usuario = usuario;
-      this.usuario!.id = user!.uid;
-      addUsuario(this.usuario!);
+      usuario = usuario;
+      usuario.id = user!.uid;
+      addUsuario(usuario);
       onSuccess!();
     } catch (e) {
-      onFail!(debugPrint(e.toString() + "  a"));
+      onFail!(debugPrint(e.toString()));
     }
   }
 

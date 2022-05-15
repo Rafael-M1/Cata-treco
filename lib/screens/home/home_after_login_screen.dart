@@ -3,10 +3,11 @@ import 'package:cata_treco/models/user/usuario_services.dart';
 import 'package:cata_treco/screens/home/home_screen.dart';
 import 'package:cata_treco/screens/utils/first_page_screen.dart';
 import 'package:cata_treco/screens/utils/second_page_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeAfterLoginScreen extends StatefulWidget {
-  const HomeAfterLoginScreen({Key? key, Usuario? usuario}) : super(key: key);
+  const HomeAfterLoginScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeAfterLoginScreen> createState() => _HomeScreenState();
@@ -15,12 +16,14 @@ class HomeAfterLoginScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeAfterLoginScreen> {
   int _selectedPage = 0;
   List<Widget> listPage = [];
-  late Usuario usuario;
+  User? usuarioLogado = FirebaseAuth.instance.currentUser;
+
+  _HomeScreenState();
 
   @override
   void initState() {
     listPage.add(const FirstPageScreen());
-    listPage.add(const SecondPageScreen());
+    listPage.add(SecondPageScreen());
     super.initState();
   }
 
@@ -33,10 +36,10 @@ class _HomeScreenState extends State<HomeAfterLoginScreen> {
           PopupMenuButton<int>(
             onSelected: (index) => onSelected(context, index),
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 child: Text(
-                  "Bem-vindo",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "Olá, " + usuarioLogado!.email.toString().split('@')[0],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 enabled: false,
               ),
