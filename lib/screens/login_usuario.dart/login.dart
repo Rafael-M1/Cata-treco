@@ -1,7 +1,6 @@
 import 'package:cata_treco/models/user/usuario.dart';
 import 'package:cata_treco/models/user/usuario_services.dart';
-import 'package:cata_treco/screens/lista_usuario/lista_usuario.dart';
-import 'package:cata_treco/screens/utils/second_page_screen.dart';
+import 'package:cata_treco/screens/home/home_after_login_screen.dart';
 import 'package:flutter/material.dart';
 
 class UsuarioLoginScreen extends StatefulWidget {
@@ -29,7 +28,6 @@ class _UnitScreenState extends State<UsuarioLoginScreen> {
             child: Column(
               children: [
                 Column(
-                  //crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,10 +108,12 @@ class _UnitScreenState extends State<UsuarioLoginScreen> {
                       _usuarioServices.signIn(
                         usuario,
                         onSuccess: () {
-                          Navigator.of(context).pushReplacement(
+                          Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                              builder: (context) => const SecondPageScreen(),
+                              builder: (context) =>
+                                  const HomeAfterLoginScreen(),
                             ),
+                            (Route<dynamic> route) => false,
                           );
                         },
                         onFail: (e) {

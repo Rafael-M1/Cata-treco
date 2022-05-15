@@ -6,7 +6,6 @@ import 'package:cata_treco/models/user/usuario_services.dart';
 class UsuarioRegisterScreen extends StatelessWidget {
   UsuarioRegisterScreen({Key? key}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Usuario usuario = Usuario();
 

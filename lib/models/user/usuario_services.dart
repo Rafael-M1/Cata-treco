@@ -40,14 +40,19 @@ class UsuarioServices {
           .user;
       this.usuario = usuario;
       this.usuario!.id = user!.uid;
+      addUsuario(this.usuario!);
       onSuccess!();
     } catch (e) {
-      onFail!(debugPrint(e.toString()));
+      onFail!(debugPrint(e.toString() + "  a"));
     }
   }
 
-  addUsuario(Usuario usuario) {
-    _firestore.collection("Usuarios").add(
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
+
+  addUsuario(Usuario usuario) async {
+    await _firestore.collection("Usuarios").add(
           usuario
               .toMap(), //toMap faz a conversão do objeto em um MAP para ser persistido no Firebase, enviamos dados em formato Json
         );
