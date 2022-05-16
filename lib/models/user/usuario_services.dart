@@ -45,7 +45,7 @@ class UsuarioServices {
           .user;
       usuario = usuario;
       usuario.id = user!.uid;
-      addUsuario(usuario);
+      addUsuario(usuario, user.uid);
       onSuccess!();
     } catch (e) {
       onFail!(debugPrint(e.toString()));
@@ -56,11 +56,34 @@ class UsuarioServices {
     await _auth.signOut();
   }
 
-  addUsuario(Usuario usuario) async {
-    await _firestore.collection("Usuarios").add(
+  addUsuario(Usuario usuario, String id) async {
+    await _firestore.collection("Usuarios").doc(id).set(
           usuario
               .toMap(), //toMap faz a conversão do objeto em um MAP para ser persistido no Firebase, enviamos dados em formato Json
         );
+  }
+
+  Usuario getUsuarioLogado(String id, Usuario usuario) {
+    _firestore.collection('Usuarios').doc(id).get().then((data) {
+      usuario.id = data['id'];
+      usuario.nome = data['nome'];
+      usuario.email = data['email'];
+      usuario.password = data['password'];
+      usuario.telefone = data['telefone'];
+      usuario.confirmPassword = data['confirmPassword'];
+    });
+
+    // if (docSnapshot.exists) {
+    //   Map<String, dynamic>? data = docSnapshot.data();
+    //   usuario.nome = data?['nome'];
+    //   usuario.telefone = data?['telefone'];
+    //   usuario.email = data?['email'];
+    //   usuario.id = data?['id'];
+    //   usuario.confirmPassword = data?['confirmPassword'];
+    //   usuario.password = data?['password'];
+    // }
+
+    return usuario;
   }
 
   //Criar método para obter os dados do FIREBASE

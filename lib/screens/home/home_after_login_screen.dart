@@ -16,19 +16,22 @@ class HomeAfterLoginScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeAfterLoginScreen> {
   int _selectedPage = 0;
   List<Widget> listPage = [];
-  User? usuarioLogado = FirebaseAuth.instance.currentUser;
-
-  _HomeScreenState();
 
   @override
   void initState() {
     listPage.add(const FirstPageScreen());
     listPage.add(SecondPageScreen());
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    User? userLogado = FirebaseAuth.instance.currentUser;
+    UsuarioServices usuarioServices = UsuarioServices();
+    Usuario usuarioLogado = Usuario();
+    usuarioLogado =
+        usuarioServices.getUsuarioLogado(userLogado!.uid, usuarioLogado);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cata-Treco'),
@@ -38,7 +41,7 @@ class _HomeScreenState extends State<HomeAfterLoginScreen> {
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: Text(
-                  "Olá, " + usuarioLogado!.email.toString().split('@')[0],
+                  "Olá, " + usuarioLogado.nome!,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 enabled: false,

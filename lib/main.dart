@@ -1,5 +1,4 @@
 import 'package:cata_treco/screens/cadastro_usuario/cadastro_usuario.dart';
-import 'package:cata_treco/screens/home/home_after_login_screen.dart';
 import 'package:cata_treco/screens/home/home_screen.dart';
 import 'package:cata_treco/screens/login_usuario.dart/login.dart';
 import 'package:firebase_core/firebase_core.dart';
