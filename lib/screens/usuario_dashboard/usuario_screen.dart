@@ -13,43 +13,48 @@ class UsuarioCardScreen extends StatelessWidget {
       item1,
       item2,
     ];
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: ListView.builder(
-        itemCount: myList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () => callUnit(context, index),
-            child: Card(
-              elevation: 20,
-              color: Colors.teal,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(5.0),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    child: Text(
-                      myList.elementAt(index).title,
-                      style: const TextStyle(
-                        fontSize: 38.0,
-                        color: Colors.white,
-                        backgroundColor: Colors.teal,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cata-Treco'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: ListView.builder(
+          itemCount: myList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () => callUnit(context, index),
+              child: Card(
+                elevation: 20,
+                color: Colors.teal,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(5.0),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      child: Text(
+                        myList.elementAt(index).title,
+                        style: const TextStyle(
+                          fontSize: 38.0,
+                          color: Colors.white,
+                          backgroundColor: Colors.teal,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

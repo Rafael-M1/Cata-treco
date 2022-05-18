@@ -6,6 +6,9 @@ class FirstPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cata-Treco'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: const [

@@ -22,9 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cata-Treco'),
-      ),
       body: IndexedStack(
         index: _selectedPage,
         children: listPage,

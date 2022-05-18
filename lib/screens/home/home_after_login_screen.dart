@@ -1,9 +1,5 @@
-import 'package:cata_treco/models/user/usuario.dart';
-import 'package:cata_treco/models/user/usuario_services.dart';
-import 'package:cata_treco/screens/home/home_screen.dart';
-import 'package:cata_treco/screens/utils/first_page_screen.dart';
-import 'package:cata_treco/screens/utils/second_page_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cata_treco/screens/tabbars/tab_bar_page_screen.dart';
+import 'package:cata_treco/screens/utils/first_page_AL_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeAfterLoginScreen extends StatefulWidget {
@@ -19,50 +15,15 @@ class _HomeScreenState extends State<HomeAfterLoginScreen> {
 
   @override
   void initState() {
-    listPage.add(const FirstPageScreen());
-    listPage.add(SecondPageScreen());
+    listPage.add(const FirstPageALScreen());
+    listPage.add(const UserTabPageScreen());
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    User? userLogado = FirebaseAuth.instance.currentUser;
-    UsuarioServices usuarioServices = UsuarioServices();
-    Usuario usuarioLogado = Usuario();
-    usuarioLogado =
-        usuarioServices.getUsuarioLogado(userLogado!.uid, usuarioLogado);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cata-Treco'),
-        actions: [
-          PopupMenuButton<int>(
-            onSelected: (index) => onSelected(context, index),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                child: Text(
-                  "Olá, " + usuarioLogado.nome!,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                enabled: false,
-              ),
-              PopupMenuItem(
-                value: 0,
-                child: Row(
-                  children: const [
-                    Icon(
-                      Icons.logout,
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: 8.0),
-                    Text("Desconectar"),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
       body: IndexedStack(
         index: _selectedPage,
         children: listPage,
@@ -88,19 +49,5 @@ class _HomeScreenState extends State<HomeAfterLoginScreen> {
     setState(() {
       _selectedPage = index;
     });
-  }
-
-  void onSelected(BuildContext context, int index) {
-    UsuarioServices _usuarioServices = UsuarioServices();
-    switch (index) {
-      case 0:
-        _usuarioServices.signOut();
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-            (route) => false);
-        break;
-    }
   }
 }

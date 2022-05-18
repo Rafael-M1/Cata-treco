@@ -1,6 +1,7 @@
 import 'package:cata_treco/screens/cadastro_usuario/cadastro_usuario.dart';
 import 'package:cata_treco/screens/home/home_screen.dart';
 import 'package:cata_treco/screens/login_usuario.dart/login.dart';
+import 'package:cata_treco/screens/profile/user_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         '/usuario': (context) => UsuarioRegisterScreen(),
         '/home': (context) => const HomeScreen(),
         '/login': (context) => const UsuarioLoginScreen(),
+        '/profile': (context) => const UserProfileScreen(),
       },
     );
   }

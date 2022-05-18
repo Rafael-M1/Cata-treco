@@ -12,20 +12,15 @@ class ColetaServices {
   addColeta(Usuario usuario, Coleta coleta) async {
     await _firestore
         .collection("Usuarios")
-        .doc(usuario.email)
+        .doc(usuario.id)
         .collection("Coletas")
         .add(coleta.toMap());
-    // .document().add(
-    //       usuario
-    //           .toMap(), //toMap faz a conversão do objeto em um MAP para ser persistido no Firebase, enviamos dados em formato Json
-    //     );
   }
 
-  // //Criar método para obter os dados do FIREBASE
-  // //Devemos definir o tipo de retorno de acordo com quem vai receber o resultado
-  // Stream<QuerySnapshot> getUsuarioList() {
-  //   //definimos que tipo de dados pode conter a listagem vindo do firebase
-  //   CollectionReference unitCollection = _firestore.collection('Usuarios');
-  //   return unitCollection.snapshots();
-  // }
+  Stream<QuerySnapshot> getColetaList(Usuario usuario) {
+    //definimos que tipo de dados pode conter a listagem vindo do firebase
+    CollectionReference coletasCollection =
+        _firestore.collection('Usuarios').doc(usuario.id).collection("Coletas");
+    return coletasCollection.snapshots();
+  }
 }
