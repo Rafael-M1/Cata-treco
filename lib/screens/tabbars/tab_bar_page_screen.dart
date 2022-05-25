@@ -1,5 +1,7 @@
 import 'package:cata_treco/models/coleta/coleta.dart';
 import 'package:cata_treco/models/coleta/coleta_services.dart';
+import 'package:cata_treco/screens/tabbars/tab_adicionar_coleta_screen.dart';
+import 'package:cata_treco/screens/tabbars/tab_minhas_coletas.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -17,20 +19,17 @@ class UserTabPageScreen extends StatefulWidget {
 }
 
 class _UserTabPageScreenState extends State<UserTabPageScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<String> listTabBar = [
-    'Adicionar Coleta',
+    'Registrar Coleta',
     'Minhas Coletas',
     //'Coletas Finalizadas'
   ];
+  User? userLogado = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    User? userLogado = FirebaseAuth.instance.currentUser;
     UsuarioServices usuarioServices = UsuarioServices();
-    Usuario usuarioLogado = Usuario();
-    usuarioLogado =
-        usuarioServices.getUsuarioLogado(userLogado!.uid, usuarioLogado);
+    Usuario usuarioLogado = usuarioServices.getUsuarioLogado(userLogado!.uid);
     ColetaServices coletaServices = ColetaServices();
 
     final Coleta coleta = Coleta();
@@ -91,9 +90,8 @@ class _UserTabPageScreenState extends State<UserTabPageScreen> {
         ),
         body: TabBarView(
           children: [
-            tabAdicionarColeta(usuarioLogado, coleta),
-            tabMinhasColetas(usuarioLogado, coletaServices),
-            //const Center(child: Text('TABBAR3')),
+            tabAdicionarColetaScreen(),
+            const tabMinhasColetasScreen(),
           ],
         ),
       ),
@@ -117,113 +115,58 @@ class _UserTabPageScreenState extends State<UserTabPageScreen> {
     }
   }
 
-  Widget tabAdicionarColeta(Usuario usuarioLogado, Coleta coleta) {
-    //dataColeta descricaoColeta statusColeta;
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const Text(
-                'Descrição do Objeto da Coleta',
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-              const SizedBox(height: 5),
-              TextFormField(
-                keyboardType: TextInputType.text,
-                style: const TextStyle(fontSize: 18.0),
-                validator: (descricao) {
-                  if (descricao == null || descricao.isEmpty) {
-                    return 'Por favor, entre com uma descrição do Objeto.';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      width: 2,
-                      color: Colors.blueGrey,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                onSaved: (descricao) => coleta.descricaoColeta = descricao,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-
-                    ColetaServices coletaServices = ColetaServices();
-                    coleta.statusColeta = "A";
-                    coletaServices.addColeta(usuarioLogado, coleta);
-                  }
-                },
-                child: const Text("Salvar Dados"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  tabMinhasColetas(Usuario usuarioLogado, ColetaServices coletaServices) {
-    return Material(
-      child: StreamBuilder<QuerySnapshot>(
-        //O stream é a propriedade que vai receber o fluxo de dados vindo do Firebase
-        stream: coletaServices.getColetaList(usuarioLogado),
-        builder: (BuildContext context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasData && snapshot.data != null) {
-            //precisamos obter uma referencia da listagem
-            final List<DocumentSnapshot> docSnap = snapshot.data!.docs;
-            return Scaffold(
-              body: ListView.separated(
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title:
-                          Text(docSnap[index].get('descricaoColeta') + "teste"),
-                      subtitle: Text(docSnap[index].get('statusColeta')),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    );
-                  }, //Propriedade para construir o widget que vai apresentar os dados
-                  separatorBuilder: (context, index) => const SizedBox(
-                        height: 10,
-                      ), //separador, mostra uma separação na listagem
-                  itemCount: docSnap
-                      .length //informa quantos items tem na listagem do stream
-                  ),
-            );
-          } else if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.data == null) {
-            return Center(
-              child: ListView(
-                children: const [
-                  Align(
-                    alignment: AlignmentDirectional.center,
-                    child: Text("Não há dados disponíveis"),
-                  )
-                ],
-              ),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-    );
-  }
+  // tabMinhasColetas(Usuario usuarioLogado, ColetaServices coletaServices) {
+  //   return Material(
+  //     child: StreamBuilder<QuerySnapshot>(
+  //       //O stream é a propriedade que vai receber o fluxo de dados vindo do Firebase
+  //       stream: coletaServices.getColetaList(usuarioLogado),
+  //       builder: (BuildContext context, snapshot) {
+  //         if (!snapshot.hasData) {
+  //           return const Center(
+  //             child: CircularProgressIndicator(),
+  //           );
+  //         }
+  //         if (snapshot.hasData && snapshot.data != null) {
+  //           //precisamos obter uma referencia da listagem
+  //           final List<DocumentSnapshot> docSnap = snapshot.data!.docs;
+  //           return Scaffold(
+  //             body: ListView.separated(
+  //                 itemBuilder: (context, index) {
+  //                   return ListTile(
+  //                     title:
+  //                         Text(docSnap[index].get('descricaoColeta') + "teste"),
+  //                     subtitle: Text(docSnap[index].get('statusColeta')),
+  //                     shape: RoundedRectangleBorder(
+  //                       borderRadius: BorderRadius.circular(8.0),
+  //                     ),
+  //                   );
+  //                 }, //Propriedade para construir o widget que vai apresentar os dados
+  //                 separatorBuilder: (context, index) => const SizedBox(
+  //                       height: 10,
+  //                     ), //separador, mostra uma separação na listagem
+  //                 itemCount: docSnap
+  //                     .length //informa quantos items tem na listagem do stream
+  //                 ),
+  //           );
+  //         } else if (snapshot.connectionState == ConnectionState.done &&
+  //             snapshot.data == null) {
+  //           return Center(
+  //             child: ListView(
+  //               children: const [
+  //                 Align(
+  //                   alignment: AlignmentDirectional.center,
+  //                   child: Text("Não há dados disponíveis"),
+  //                 )
+  //               ],
+  //             ),
+  //           );
+  //         } else {
+  //           return const Center(
+  //             child: CircularProgressIndicator(),
+  //           );
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
 }

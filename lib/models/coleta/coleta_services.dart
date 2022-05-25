@@ -17,10 +17,10 @@ class ColetaServices {
         .add(coleta.toMap());
   }
 
-  Stream<QuerySnapshot> getColetaList(Usuario usuario) {
+  Stream<QuerySnapshot> getColetaList(String id) {
     //definimos que tipo de dados pode conter a listagem vindo do firebase
     CollectionReference coletasCollection =
-        _firestore.collection('Usuarios').doc(usuario.id).collection("Coletas");
+        _firestore.collection('Usuarios').doc(id).collection("Coletas");
     return coletasCollection.snapshots();
   }
 }

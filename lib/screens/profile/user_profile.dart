@@ -19,9 +19,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   UsuarioServices usuarioServices = UsuarioServices();
   @override
   Widget build(BuildContext context) {
-    Usuario usuarioLogado = Usuario();
-    usuarioLogado =
-        usuarioServices.getUsuarioLogado(userLogado!.uid, usuarioLogado);
+    Usuario usuarioLogado = usuarioServices.getUsuarioLogado(userLogado!.uid);
     return DefaultTabController(
       length: listTabBar.length,
       child: Scaffold(

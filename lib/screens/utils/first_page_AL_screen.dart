@@ -12,9 +12,7 @@ class FirstPageALScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     User? userLogado = FirebaseAuth.instance.currentUser;
     UsuarioServices usuarioServices = UsuarioServices();
-    Usuario usuarioLogado = Usuario();
-    usuarioLogado =
-        usuarioServices.getUsuarioLogado(userLogado!.uid, usuarioLogado);
+    Usuario usuarioLogado = usuarioServices.getUsuarioLogado(userLogado!.uid);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cata-Treco'),

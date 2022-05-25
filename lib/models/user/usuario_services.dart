@@ -58,12 +58,13 @@ class UsuarioServices {
 
   addUsuario(Usuario usuario, String id) async {
     await _firestore.collection("Usuarios").doc(id).set(
-          usuario
-              .toMap(), //toMap faz a conversão do objeto em um MAP para ser persistido no Firebase, enviamos dados em formato Json
+          usuario.toMap(),
         );
+    //toMap faz a conversão do objeto em um MAP para ser persistido no Firebase, enviamos dados em formato Json
   }
 
-  Usuario getUsuarioLogado(String id, Usuario usuario) {
+  Usuario getUsuarioLogado(String id) {
+    Usuario usuario = Usuario();
     _firestore.collection('Usuarios').doc(id).get().then((data) {
       usuario.id = data['id'];
       usuario.nome = data['nome'];
@@ -72,17 +73,6 @@ class UsuarioServices {
       usuario.telefone = data['telefone'];
       usuario.confirmPassword = data['confirmPassword'];
     });
-
-    // if (docSnapshot.exists) {
-    //   Map<String, dynamic>? data = docSnapshot.data();
-    //   usuario.nome = data?['nome'];
-    //   usuario.telefone = data?['telefone'];
-    //   usuario.email = data?['email'];
-    //   usuario.id = data?['id'];
-    //   usuario.confirmPassword = data?['confirmPassword'];
-    //   usuario.password = data?['password'];
-    // }
-
     return usuario;
   }
 
