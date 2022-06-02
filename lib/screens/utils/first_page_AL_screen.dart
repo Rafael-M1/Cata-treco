@@ -19,6 +19,15 @@ class FirstPageALScreen extends StatelessWidget {
         actions: [
           PopupMenuButton<int>(
             onSelected: (index) => onSelected(context, index),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Row(
+                children: const [
+                  Text("Menu"),
+                  Icon(Icons.more_vert),
+                ],
+              ),
+            ),
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: Text(

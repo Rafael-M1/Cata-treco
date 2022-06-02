@@ -1,6 +1,5 @@
-import 'package:cata_treco/models/user/usuario.dart';
-import 'package:cata_treco/models/user/usuario_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cata_treco/screens/profile/tab_alterar_meus_dados.dart';
+import 'package:cata_treco/screens/profile/tab_meus_dados.dart';
 import 'package:flutter/material.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -15,11 +14,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     'Meus Dados',
     'Alterar Meus Dados',
   ];
-  User? userLogado = FirebaseAuth.instance.currentUser;
-  UsuarioServices usuarioServices = UsuarioServices();
   @override
   Widget build(BuildContext context) {
-    Usuario usuarioLogado = usuarioServices.getUsuarioLogado(userLogado!.uid);
     return DefaultTabController(
       length: listTabBar.length,
       child: Scaffold(
@@ -35,161 +31,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ).toList(),
           ),
         ),
-        body: TabBarView(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Nome',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    enabled: false,
-                    keyboardType: TextInputType.text,
-                    style: const TextStyle(fontSize: 18.0),
-                    decoration: InputDecoration(
-                      // hintText: "nome",
-                      hintText: usuarioLogado.nome,
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          width: 2,
-                          color: Colors.blueGrey,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    'E-mail',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    enabled: false,
-                    keyboardType: TextInputType.text,
-                    style: const TextStyle(fontSize: 18.0),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          width: 2,
-                          color: Colors.blueGrey,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    'Telefone',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    enabled: false,
-                    keyboardType: TextInputType.text,
-                    style: const TextStyle(fontSize: 18.0),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          width: 2,
-                          color: Colors.blueGrey,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // tabMeusDados(usuarioLogadoNome!),
-            const Center(child: Text('TABBAR2')),
+        body: const TabBarView(
+          children: [
+            tabMeusDadosScreen(),
+            tabAlterarMeusDadosScreen(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget tabMeusDados(String usuarioLogadoNome) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Nome',
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
-          const SizedBox(height: 5),
-          TextFormField(
-            enabled: false,
-            keyboardType: TextInputType.text,
-            style: const TextStyle(fontSize: 18.0),
-            decoration: InputDecoration(
-              hintText: "nome",
-              // hintText: usuarioLogadoNome,
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 2,
-                  color: Colors.blueGrey,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-          ),
-          const Text(
-            'E-mail',
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
-          const SizedBox(height: 5),
-          TextFormField(
-            enabled: false,
-            keyboardType: TextInputType.text,
-            style: const TextStyle(fontSize: 18.0),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 2,
-                  color: Colors.blueGrey,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-          ),
-          const Text(
-            'Telefone',
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
-          const SizedBox(height: 5),
-          TextFormField(
-            enabled: false,
-            keyboardType: TextInputType.text,
-            style: const TextStyle(fontSize: 18.0),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 2,
-                  color: Colors.blueGrey,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -5,14 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class tabMinhasColetasScreen extends StatefulWidget {
-  const tabMinhasColetasScreen({Key? key}) : super(key: key);
+class tabMinhasColetasFinalizadasScreen extends StatefulWidget {
+  const tabMinhasColetasFinalizadasScreen({Key? key}) : super(key: key);
 
   @override
-  State<tabMinhasColetasScreen> createState() => _tabMinhasColetasScreenState();
+  State<tabMinhasColetasFinalizadasScreen> createState() =>
+      _tabMinhasColetasFinalizadasScreenState();
 }
 
-class _tabMinhasColetasScreenState extends State<tabMinhasColetasScreen> {
+class _tabMinhasColetasFinalizadasScreenState
+    extends State<tabMinhasColetasFinalizadasScreen> {
   User? userLogado = FirebaseAuth.instance.currentUser;
 
   @override
@@ -21,7 +23,7 @@ class _tabMinhasColetasScreenState extends State<tabMinhasColetasScreen> {
     return Material(
       child: StreamBuilder<QuerySnapshot>(
         //O stream é a propriedade que vai receber o fluxo de dados vindo do Firebase
-        stream: coletaServices.getColetaList(userLogado!.uid),
+        stream: coletaServices.getColetaFinalizadaList(userLogado!.uid),
         builder: (BuildContext context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -52,7 +54,7 @@ class _tabMinhasColetasScreenState extends State<tabMinhasColetasScreen> {
                                     : "Preferência: Ambos") +
                             " --- " +
                             (docSnap[index].get('dataColeta') == null
-                                ? "Coleta ainda não agendada"
+                                ? "Teste"
                                 : "teste"),
                       ),
                       shape: RoundedRectangleBorder(

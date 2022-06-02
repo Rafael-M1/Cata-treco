@@ -1,8 +1,7 @@
-import 'package:cata_treco/models/coleta/coleta.dart';
-import 'package:cata_treco/models/coleta/coleta_services.dart';
 import 'package:cata_treco/screens/tabbars/tab_adicionar_coleta_screen.dart';
 import 'package:cata_treco/screens/tabbars/tab_minhas_coletas.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cata_treco/screens/tabbars/tab_minhas_coletas_finalizadas.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:cata_treco/screens/home/home_screen.dart';
@@ -22,7 +21,7 @@ class _UserTabPageScreenState extends State<UserTabPageScreen> {
   List<String> listTabBar = [
     'Registrar Coleta',
     'Minhas Coletas',
-    //'Coletas Finalizadas'
+    'Coletas Finalizadas'
   ];
   User? userLogado = FirebaseAuth.instance.currentUser;
 
@@ -30,15 +29,14 @@ class _UserTabPageScreenState extends State<UserTabPageScreen> {
   Widget build(BuildContext context) {
     UsuarioServices usuarioServices = UsuarioServices();
     Usuario usuarioLogado = usuarioServices.getUsuarioLogado(userLogado!.uid);
-    ColetaServices coletaServices = ColetaServices();
 
-    final Coleta coleta = Coleta();
     return DefaultTabController(
       length: listTabBar.length,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Coletas"),
           bottom: TabBar(
+            isScrollable: true,
             tabs: listTabBar.map(
               (e) {
                 return Tab(
@@ -50,6 +48,15 @@ class _UserTabPageScreenState extends State<UserTabPageScreen> {
           actions: [
             PopupMenuButton<int>(
               onSelected: (index) => onSelected(context, index),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Row(
+                  children: const [
+                    Text("Menu"),
+                    Icon(Icons.more_vert),
+                  ],
+                ),
+              ),
               itemBuilder: (context) => [
                 PopupMenuItem(
                   child: Text(
@@ -92,6 +99,7 @@ class _UserTabPageScreenState extends State<UserTabPageScreen> {
           children: [
             tabAdicionarColetaScreen(),
             const tabMinhasColetasScreen(),
+            const tabMinhasColetasFinalizadasScreen(),
           ],
         ),
       ),
@@ -114,59 +122,4 @@ class _UserTabPageScreenState extends State<UserTabPageScreen> {
         break;
     }
   }
-
-  // tabMinhasColetas(Usuario usuarioLogado, ColetaServices coletaServices) {
-  //   return Material(
-  //     child: StreamBuilder<QuerySnapshot>(
-  //       //O stream é a propriedade que vai receber o fluxo de dados vindo do Firebase
-  //       stream: coletaServices.getColetaList(usuarioLogado),
-  //       builder: (BuildContext context, snapshot) {
-  //         if (!snapshot.hasData) {
-  //           return const Center(
-  //             child: CircularProgressIndicator(),
-  //           );
-  //         }
-  //         if (snapshot.hasData && snapshot.data != null) {
-  //           //precisamos obter uma referencia da listagem
-  //           final List<DocumentSnapshot> docSnap = snapshot.data!.docs;
-  //           return Scaffold(
-  //             body: ListView.separated(
-  //                 itemBuilder: (context, index) {
-  //                   return ListTile(
-  //                     title:
-  //                         Text(docSnap[index].get('descricaoColeta') + "teste"),
-  //                     subtitle: Text(docSnap[index].get('statusColeta')),
-  //                     shape: RoundedRectangleBorder(
-  //                       borderRadius: BorderRadius.circular(8.0),
-  //                     ),
-  //                   );
-  //                 }, //Propriedade para construir o widget que vai apresentar os dados
-  //                 separatorBuilder: (context, index) => const SizedBox(
-  //                       height: 10,
-  //                     ), //separador, mostra uma separação na listagem
-  //                 itemCount: docSnap
-  //                     .length //informa quantos items tem na listagem do stream
-  //                 ),
-  //           );
-  //         } else if (snapshot.connectionState == ConnectionState.done &&
-  //             snapshot.data == null) {
-  //           return Center(
-  //             child: ListView(
-  //               children: const [
-  //                 Align(
-  //                   alignment: AlignmentDirectional.center,
-  //                   child: Text("Não há dados disponíveis"),
-  //                 )
-  //               ],
-  //             ),
-  //           );
-  //         } else {
-  //           return const Center(
-  //             child: CircularProgressIndicator(),
-  //           );
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
 }

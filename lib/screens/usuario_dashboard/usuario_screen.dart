@@ -13,6 +13,7 @@ class UsuarioCardScreen extends StatelessWidget {
       item1,
       item2,
     ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cata-Treco'),

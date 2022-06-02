@@ -8,11 +8,7 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class UsuarioServices {
-  static Usuario? usuario;
-
-  Usuario? get getUsuario {
-    return usuario;
-  }
+  Usuario? usuario;
 
   //Método para realizar a autenticação no firebase com email e senha
   Future<void> signIn(
@@ -45,6 +41,7 @@ class UsuarioServices {
           .user;
       usuario = usuario;
       usuario.id = user!.uid;
+      usuario.role = "n";
       addUsuario(usuario, user.uid);
       onSuccess!();
     } catch (e) {
@@ -60,7 +57,6 @@ class UsuarioServices {
     await _firestore.collection("Usuarios").doc(id).set(
           usuario.toMap(),
         );
-    //toMap faz a conversão do objeto em um MAP para ser persistido no Firebase, enviamos dados em formato Json
   }
 
   Usuario getUsuarioLogado(String id) {
@@ -82,5 +78,12 @@ class UsuarioServices {
     //definimos que tipo de dados pode conter a listagem vindo do firebase
     CollectionReference unitCollection = _firestore.collection('Usuarios');
     return unitCollection.snapshots();
+  }
+
+  Future<Usuario> getUsuarioLogado2(String id) async {
+    DocumentSnapshot docUser =
+        await _firestore.collection('Usuarios').doc(id).get();
+    //Usuario usuario = Usuario.fromDocument(docUser);
+    return Usuario.fromDocument(docUser);
   }
 }

@@ -1,106 +1,92 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: camel_case_types
 
 import 'package:cata_treco/models/user/usuario.dart';
 import 'package:cata_treco/models/user/usuario_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-class UsuarioRegisterScreen extends StatelessWidget {
-  UsuarioRegisterScreen({Key? key}) : super(key: key);
+class tabAlterarMeusDadosScreen extends StatefulWidget {
+  const tabAlterarMeusDadosScreen({Key? key}) : super(key: key);
 
+  @override
+  State<tabAlterarMeusDadosScreen> createState() =>
+      _tabAlterarMeusDadosScreenState();
+}
+
+class _tabAlterarMeusDadosScreenState extends State<tabAlterarMeusDadosScreen> {
+  User? userLogado = FirebaseAuth.instance.currentUser;
+  UsuarioServices usuarioServices = UsuarioServices();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final Usuario usuario = Usuario();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cadastro"),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Column(
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _campoNome(),
-                    const SizedBox(height: 10),
-                    _campoEmail(),
-                    const SizedBox(height: 10),
-                    _campoTelefone(),
-                    const SizedBox(height: 10),
-                    const Divider(thickness: 2, color: Colors.black),
-                    _campoEndereco(),
-                    const SizedBox(height: 10),
-                    _campoNumero(),
-                    const SizedBox(height: 10),
-                    _campoComplemento(),
-                    const SizedBox(height: 10),
-                    _campoBairro(),
-                    const SizedBox(height: 10),
-                    _campoCEP(),
-                    const SizedBox(height: 10),
-                    const Divider(thickness: 2, color: Colors.black),
-                    _campoPassword(),
-                    const SizedBox(height: 10),
-                    _campoConfirmPassword(),
-                    const SizedBox(height: 15),
-                  ],
-                ),
-                _btnSalvarDados(context),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _btnSalvarDados(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          _formKey.currentState!.save();
-          if (usuario.password != usuario.confirmPassword) {
-            const ScaffoldMessenger(
-              child: SnackBar(
-                content: Text(
-                  'Senhas não coincidem.',
-                  style: TextStyle(fontSize: 18.0),
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
-            return;
-          }
-          UsuarioServices usuarioServices = UsuarioServices();
-          usuarioServices.signUp(
-            usuario,
-            onSuccess: () {
-              Navigator.of(context).pop();
-            },
-            onFail: (e) {
-              ScaffoldMessenger(
-                child: SnackBar(
-                  content: Text(
-                    'Falha ao registrar Usuário: $e',
-                    style: const TextStyle(
-                      fontSize: 18.0,
+    return FutureBuilder<Usuario>(
+      future: usuarioServices.getUsuarioLogado2(userLogado!.uid),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          Usuario? usuarioLogado = snapshot.data;
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Column(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Alterar dados",
+                        style: TextStyle(
+                            fontSize: 27, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          Column(
+                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _campoNome(usuarioLogado!),
+                              const SizedBox(height: 10),
+                              _campoTelefone(usuarioLogado),
+                              const SizedBox(height: 10),
+                              const Divider(thickness: 2),
+                              _campoEndereco(usuarioLogado),
+                              const SizedBox(height: 10),
+                              _campoNumero(usuarioLogado),
+                              const SizedBox(height: 10),
+                              _campoComplemento(usuarioLogado),
+                              const SizedBox(height: 10),
+                              _campoBairro(usuarioLogado),
+                              const SizedBox(height: 10),
+                              _campoCEP(usuarioLogado),
+                              const SizedBox(height: 10),
+                              _btnSalvarDados(context, usuarioLogado),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
+                ],
+              ),
+            ),
           );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
         }
+        return const Center(
+          heightFactor: 14,
+          child: CircularProgressIndicator(),
+        );
       },
-      child: const Text("Salvar Dados"),
     );
   }
 
-  Column _campoNome() {
+  Column _campoNome(Usuario usuario) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -112,6 +98,7 @@ class UsuarioRegisterScreen extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          initialValue: usuario.nome,
           keyboardType: TextInputType.text,
           style: const TextStyle(fontSize: 18.0),
           validator: (nome) {
@@ -137,42 +124,7 @@ class UsuarioRegisterScreen extends StatelessWidget {
     );
   }
 
-  Column _campoEmail() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'E-mail',
-          style: TextStyle(
-            fontSize: 18.0,
-          ),
-        ),
-        const SizedBox(height: 5),
-        TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          style: const TextStyle(fontSize: 18.0),
-          validator: (email) {
-            if (email == null || email.isEmpty) {
-              return 'Por favor, entre com um e-mail.';
-            }
-            return null;
-          },
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: const BorderSide(
-                width: 2,
-                color: Colors.blueGrey,
-              ),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-          onSaved: (email) => usuario.email = email,
-        ),
-      ],
-    );
-  }
-
-  Column _campoTelefone() {
+  Column _campoTelefone(Usuario usuario) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -184,11 +136,14 @@ class UsuarioRegisterScreen extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          initialValue: usuario.telefone,
           keyboardType: TextInputType.text,
           style: const TextStyle(fontSize: 18.0),
           validator: (telefone) {
             if (telefone == null || telefone.isEmpty) {
               return 'Por favor, entre com um telefone.';
+            } else if (telefone.trim().length <= 8) {
+              return 'Preencha seu telefone completo';
             }
             return null;
           },
@@ -207,82 +162,7 @@ class UsuarioRegisterScreen extends StatelessWidget {
     );
   }
 
-  Column _campoPassword() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Senha',
-          style: TextStyle(
-            fontSize: 18.0,
-          ),
-        ),
-        const SizedBox(height: 5),
-        TextFormField(
-          obscureText: true,
-          style: const TextStyle(fontSize: 18.0),
-          validator: (password) {
-            if (password == null || password.isEmpty) {
-              return 'Por favor, entre com uma senha.';
-            } else if (password.length < 6) {
-              return 'Senha deve ter ao menos 6 caracteres.';
-            }
-            return null;
-          },
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: const BorderSide(
-                width: 2,
-                color: Colors.blueGrey,
-              ),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-          onSaved: (password) => usuario.password = password,
-        ),
-      ],
-    );
-  }
-
-  Column _campoConfirmPassword() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Repita a Senha',
-          style: TextStyle(
-            fontSize: 18.0,
-          ),
-        ),
-        const SizedBox(height: 5),
-        TextFormField(
-          obscureText: true,
-          style: const TextStyle(fontSize: 18.0),
-          validator: (confirmPassword) {
-            if (confirmPassword == null || confirmPassword.isEmpty) {
-              return 'Por favor, entre com uma senha.';
-            } else if (confirmPassword.length < 6) {
-              return 'Senha deve ter ao menos 6 caracteres.';
-            }
-            return null;
-          },
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: const BorderSide(
-                width: 2,
-                color: Colors.blueGrey,
-              ),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-          onSaved: (confirmPassword) =>
-              usuario.confirmPassword = confirmPassword,
-        ),
-      ],
-    );
-  }
-
-  Column _campoEndereco() {
+  Column _campoEndereco(Usuario usuario) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -294,10 +174,12 @@ class UsuarioRegisterScreen extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          initialValue: usuario.endereco,
+          keyboardType: TextInputType.text,
           style: const TextStyle(fontSize: 18.0),
           validator: (endereco) {
             if (endereco == null || endereco.isEmpty) {
-              return 'Por favor, entre com um endereço.';
+              return 'Por favor, entre com um Endereço.';
             }
             return null;
           },
@@ -316,7 +198,7 @@ class UsuarioRegisterScreen extends StatelessWidget {
     );
   }
 
-  Column _campoNumero() {
+  Column _campoNumero(Usuario usuario) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -328,10 +210,12 @@ class UsuarioRegisterScreen extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          initialValue: usuario.numero,
+          keyboardType: TextInputType.text,
           style: const TextStyle(fontSize: 18.0),
           validator: (numero) {
             if (numero == null || numero.isEmpty) {
-              return 'Por favor, entre com um número de endereço.';
+              return 'Por favor, entre com um Número de Endereço.';
             }
             return null;
           },
@@ -350,7 +234,7 @@ class UsuarioRegisterScreen extends StatelessWidget {
     );
   }
 
-  Column _campoComplemento() {
+  Column _campoComplemento(Usuario usuario) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -362,10 +246,12 @@ class UsuarioRegisterScreen extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          initialValue: usuario.complemento,
+          keyboardType: TextInputType.text,
           style: const TextStyle(fontSize: 18.0),
           validator: (complemento) {
             if (complemento == null || complemento.isEmpty) {
-              return 'Por favor, entre com o complemento.';
+              return 'Por favor, entre com um Complemento do Endereço.';
             }
             return null;
           },
@@ -384,7 +270,7 @@ class UsuarioRegisterScreen extends StatelessWidget {
     );
   }
 
-  Column _campoBairro() {
+  Column _campoBairro(Usuario usuario) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -396,6 +282,8 @@ class UsuarioRegisterScreen extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          initialValue: usuario.bairro,
+          keyboardType: TextInputType.text,
           style: const TextStyle(fontSize: 18.0),
           validator: (bairro) {
             if (bairro == null || bairro.isEmpty) {
@@ -418,7 +306,7 @@ class UsuarioRegisterScreen extends StatelessWidget {
     );
   }
 
-  Column _campoCEP() {
+  Column _campoCEP(Usuario usuario) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -430,10 +318,12 @@ class UsuarioRegisterScreen extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          initialValue: usuario.cep,
+          keyboardType: TextInputType.text,
           style: const TextStyle(fontSize: 18.0),
           validator: (cep) {
             if (cep == null || cep.isEmpty) {
-              return 'Por favor, entre com o número do CEP.';
+              return 'Por favor, entre com um CEP.';
             }
             return null;
           },
@@ -449,6 +339,18 @@ class UsuarioRegisterScreen extends StatelessWidget {
           onSaved: (cep) => usuario.cep = cep,
         ),
       ],
+    );
+  }
+
+  _btnSalvarDados(BuildContext context, Usuario usuario) {
+    return ElevatedButton(
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          _formKey.currentState!.save();
+          usuarioServices.addUsuario(usuario, userLogado!.uid);
+        }
+      },
+      child: const Text("Salvar Dados"),
     );
   }
 }
