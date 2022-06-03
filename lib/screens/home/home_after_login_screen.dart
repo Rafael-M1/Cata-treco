@@ -1,5 +1,6 @@
 import 'package:cata_treco/models/user/usuario.dart';
 import 'package:cata_treco/models/user/usuario_services.dart';
+import 'package:cata_treco/screens/administracao/administracao_dashboard/administracao_screen.dart';
 import 'package:cata_treco/screens/tabbars/tab_bar_page_screen.dart';
 import 'package:cata_treco/screens/utils/first_page_AL_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +15,7 @@ class HomeAfterLoginScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeAfterLoginScreen> {
   int _selectedPage = 0;
   List<Widget> listPage = [];
-  late bool isAdmin;
+  bool isAdmin = false;
   List<BottomNavigationBarItem> items = <BottomNavigationBarItem>[
     const BottomNavigationBarItem(
       icon: Icon(Icons.home),
@@ -24,27 +25,23 @@ class _HomeScreenState extends State<HomeAfterLoginScreen> {
       icon: Icon(Icons.category),
       label: 'Coleta',
     ),
-    // const BottomNavigationBarItem(
-    //   icon: Icon(Icons.category),
-    //   label: 'Administração',
-    // ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.admin_panel_settings),
+      label: 'Administração',
+    )
   ];
 
   @override
   void initState() {
-    // _isUserAdminMethod();
     listPage.add(const FirstPageALScreen());
     listPage.add(const UserTabPageScreen());
-    // if (isAdmin) {
-    //   listPage.add(const FirstPageALScreen());
-    // } else {
-    //   items.removeLast();
-    // }
+    listPage.add(const AdministracaoCardScreen());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    _isUserAdminMethod();
     return Scaffold(
       body: IndexedStack(
         index: _selectedPage,
@@ -64,21 +61,14 @@ class _HomeScreenState extends State<HomeAfterLoginScreen> {
     });
   }
 
-  void _isUserAdminMethod() async {
+  Future<void> _isUserAdminMethod() async {
     User? userLogado = FirebaseAuth.instance.currentUser;
     UsuarioServices usuarioServices = UsuarioServices();
     Usuario usuario = await usuarioServices.getUsuarioLogado2(userLogado!.uid);
     if (usuario.role == "n") {
       setState(() {
-        // items.removeLast();
-        print("Usuario não é admin");
-        isAdmin = false;
-      });
-    } else if (usuario.role == "a") {
-      setState(() {
-        // listPage.add(const FirstPageALScreen());
-        print("Usuario é admin");
-        isAdmin = true;
+        listPage.removeAt(2);
+        items.removeAt(2);
       });
     }
   }

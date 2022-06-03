@@ -1,9 +1,7 @@
 import 'package:cata_treco/models/coleta/coleta.dart';
 import 'package:cata_treco/models/user/usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-FirebaseAuth _auth = FirebaseAuth.instance;
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class ColetaServices {
@@ -36,4 +34,11 @@ class ColetaServices {
         .where("statusColeta", isEqualTo: "f")
         .snapshots();
   }
+  // Stream<QuerySnapshot> getUsuarioColetaFinalizadaList(String id) {
+  //   //definimos que tipo de dados pode conter a listagem vindo do firebase
+  //   return _firestore.collection('Usuarios').
+        
+  //       .get()
+  //       .then((querySnapshot) => querySnapshot.docs.map((doc) => doc.reference.collection('Coletas')));
+  // }
 }

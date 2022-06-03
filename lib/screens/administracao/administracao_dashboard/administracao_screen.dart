@@ -1,13 +1,15 @@
+import 'package:cata_treco/screens/administracao/agendar_coletas/agendar_coletas_screen.dart';
+import 'package:cata_treco/screens/administracao/lista_usuario/lista_usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:cata_treco/models/ItemDashboard/items_dashboard.dart';
 
-class UsuarioCardScreen extends StatelessWidget {
-  const UsuarioCardScreen({Key? key}) : super(key: key);
+class AdministracaoCardScreen extends StatelessWidget {
+  const AdministracaoCardScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ItemDashboard item1 = ItemDashboard("Cadastro", "icone-login.png");
-    ItemDashboard item2 = ItemDashboard("Login", "icone-login.png");
+    ItemDashboard item1 = ItemDashboard("Lista de Usuários", "icone-login.png");
+    ItemDashboard item2 = ItemDashboard("Agendar Coletas", "icone-login.png");
 
     List<ItemDashboard> myList = [
       item1,
@@ -62,10 +64,18 @@ class UsuarioCardScreen extends StatelessWidget {
 
   callUnit(BuildContext context, int index) {
     if (index == 0) {
-      Navigator.of(context).pushNamed("/usuario");
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const UsuarioListScreen(),
+        ),
+      );
     }
     if (index == 1) {
-      Navigator.of(context).pushNamed("/login");
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const AgendarColetasScreen(),
+        ),
+      );
     }
   }
 }
