@@ -1,20 +1,22 @@
-import 'package:cata_treco/models/user/usuario_services.dart';
-import 'package:cata_treco/screens/administracao/agendar_coletas/lista_coleta_screen.dart';
+import 'package:cata_treco/models/coleta/coleta_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 //Objeto para apresentação dos dados existentes
-class AgendarColetasScreen extends StatelessWidget {
-  const AgendarColetasScreen({Key? key}) : super(key: key);
+class listaColetasAdministracaoScreen extends StatelessWidget {
+  const listaColetasAdministracaoScreen({
+    Key? key,
+    required this.usuarioId,
+  }) : super(key: key);
+  final String usuarioId;
 
   @override
   Widget build(BuildContext context) {
-    UsuarioServices usuarioService = UsuarioServices();
+    ColetaServices coletaServices = ColetaServices();
     return Material(
       child: StreamBuilder<QuerySnapshot>(
         //O stream é a propriedade que vai receber o fluxo de dados vindo do Firebase
-        stream: usuarioService.getUsuarioList(),
-
+        stream: coletaServices.getColetaList(usuarioId),
         builder: (BuildContext context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -27,7 +29,7 @@ class AgendarColetasScreen extends StatelessWidget {
             return Scaffold(
               backgroundColor: Colors.grey.shade300,
               appBar: AppBar(
-                title: const Text("Agendar Coleta"),
+                title: const Text("Lista de Coletas do Usuário"),
               ),
               body: ListView.separated(
                   itemBuilder: (context, index) {
@@ -36,29 +38,46 @@ class AgendarColetasScreen extends StatelessWidget {
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
+                            Text("Objeto: " +
+                                docSnap[index].get('descricaoColeta')),
+                            Row(
                               children: [
-                                Text(docSnap[index].get('nome')),
-                                Text(docSnap[index].get('email')),
-                              ],
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.search),
-                              onPressed: () {
-                                print("Botao - " + docSnap[index].get('id'));
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        listaColetasAdministracaoScreen(
-                                      usuarioId: docSnap[index].get('id'),
-                                    ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    size: 30,
                                   ),
-                                );
-                              },
+                                  onPressed: () {},
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.delete_forever,
+                                    size: 30,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        //subtitle: Text(docSnap[index].get('email').toString()),
+                        subtitle: Text(
+                          (docSnap[index].get('statusColeta') == "A"
+                                  ? "Aguardando Agendamento"
+                                  : (docSnap[index].get('statusColeta') == "G")
+                                      ? "Agendado"
+                                      : "Coleta Finalizada") +
+                              " --- " +
+                              (docSnap[index].get('preferenciaColeta') == "m"
+                                  ? "Preferência: Manhã"
+                                  : (docSnap[index].get('preferenciaColeta') ==
+                                          "t")
+                                      ? "Preferência: Tarde"
+                                      : "Preferência: Ambos") +
+                              " --- " +
+                              (docSnap[index].get('dataColeta') == null
+                                  ? "Coleta ainda não agendada"
+                                  : "teste"),
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -68,8 +87,8 @@ class AgendarColetasScreen extends StatelessWidget {
                   separatorBuilder: (context, index) => const SizedBox(
                         height: 10,
                       ), //separador, mostra uma separação na listagem
-                  itemCount: docSnap
-                      .length //informa quantos items tem na listagem do stream
+                  itemCount: docSnap.length
+                  //informa quantos items tem na listagem do stream
                   ),
             );
           } else if (snapshot.connectionState == ConnectionState.done &&

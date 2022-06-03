@@ -24,16 +24,19 @@ class UsuarioListScreen extends StatelessWidget {
             //precisamos obter uma referencia da listagem
             final List<DocumentSnapshot> docSnap = snapshot.data!.docs;
             return Scaffold(
+              backgroundColor: Colors.grey.shade300,
               appBar: AppBar(
                 title: const Text("Lista de Usuários"),
               ),
               body: ListView.separated(
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(docSnap[index].get('nome')),
-                      subtitle: Text(docSnap[index].get('email').toString()),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                    return Card(
+                      child: ListTile(
+                        title: Text(docSnap[index].get('nome')),
+                        subtitle: Text(docSnap[index].get('email').toString()),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
                     );
                   }, //Propriedade para construir o widget que vai apresentar os dados

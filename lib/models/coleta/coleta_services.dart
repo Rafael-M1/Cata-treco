@@ -16,7 +16,6 @@ class ColetaServices {
   }
 
   Stream<QuerySnapshot> getColetaList(String id) {
-    //definimos que tipo de dados pode conter a listagem vindo do firebase
     return _firestore
         .collection('Usuarios')
         .doc(id)
@@ -26,7 +25,6 @@ class ColetaServices {
   }
 
   Stream<QuerySnapshot> getColetaFinalizadaList(String id) {
-    //definimos que tipo de dados pode conter a listagem vindo do firebase
     return _firestore
         .collection('Usuarios')
         .doc(id)
@@ -34,11 +32,13 @@ class ColetaServices {
         .where("statusColeta", isEqualTo: "f")
         .snapshots();
   }
-  // Stream<QuerySnapshot> getUsuarioColetaFinalizadaList(String id) {
-  //   //definimos que tipo de dados pode conter a listagem vindo do firebase
-  //   return _firestore.collection('Usuarios').
-        
-  //       .get()
-  //       .then((querySnapshot) => querySnapshot.docs.map((doc) => doc.reference.collection('Coletas')));
-  // }
+
+  Stream<QuerySnapshot> getUsuarioColetaNaoFinalizadaList() {
+    return _firestore
+        .collection('Usuarios')
+        .doc()
+        .collection('Coletas')
+        .where("statusColeta", isNotEqualTo: "f")
+        .snapshots();
+  }
 }
