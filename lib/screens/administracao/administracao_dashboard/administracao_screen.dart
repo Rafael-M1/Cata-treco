@@ -1,4 +1,4 @@
-import 'package:cata_treco/screens/administracao/agendar_coletas/agendar_coletas_screen.dart';
+import 'package:cata_treco/screens/administracao/agendar_coletas/lista_usuario_screen.dart';
 import 'package:cata_treco/screens/administracao/lista_usuario/lista_usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:cata_treco/models/ItemDashboard/items_dashboard.dart';

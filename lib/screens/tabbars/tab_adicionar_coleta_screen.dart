@@ -105,7 +105,7 @@ class _tabAdicionarColetaScreenState extends State<tabAdicionarColetaScreen> {
 
                       ColetaServices coletaServices = ColetaServices();
                       coleta.preferenciaColeta = preferenciaColeta;
-                      coleta.statusColeta = "A";
+                      coleta.statusColeta = "a";
                       coletaServices.addColeta(usuarioLogado, coleta);
                       showDialog(
                         context: context,

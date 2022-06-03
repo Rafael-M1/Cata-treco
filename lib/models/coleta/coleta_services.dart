@@ -14,13 +14,29 @@ class ColetaServices {
         .collection("Coletas")
         .add(coleta.toMap());
   }
+  updateColeta(String usuarioId, Coleta coleta, String coletaId) async {
+    await _firestore
+        .collection("Usuarios")
+        .doc(usuarioId)
+        .collection("Coletas")
+        .doc(coletaId)
+        .set(coleta.toMap());
+  }
+
+  removeColeta(String usuarioId, String coletaId) async {
+    await _firestore
+        .collection("Usuarios")
+        .doc(usuarioId)
+        .collection("Coletas")
+        .doc(coletaId).delete();
+  }
 
   Stream<QuerySnapshot> getColetaList(String id) {
     return _firestore
         .collection('Usuarios')
         .doc(id)
         .collection("Coletas")
-        .where("statusColeta", isNotEqualTo: "f")
+        //.where("statusColeta", isNotEqualTo: "f")
         .snapshots();
   }
 

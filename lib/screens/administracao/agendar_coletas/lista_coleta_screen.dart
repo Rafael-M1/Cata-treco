@@ -1,4 +1,6 @@
+import 'package:cata_treco/models/coleta/coleta.dart';
 import 'package:cata_treco/models/coleta/coleta_services.dart';
+import 'package:cata_treco/screens/administracao/agendar_coletas/atualizar_coleta_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -47,23 +49,46 @@ class listaColetasAdministracaoScreen extends StatelessWidget {
                                     Icons.edit,
                                     size: 30,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Coleta coleta = Coleta();
+                                    coleta.descricaoColeta = docSnap[index].get('descricaoColeta');
+                                    coleta.preferenciaColeta = docSnap[index].get('preferenciaColeta');
+                                    coleta.statusColeta = docSnap[index].get('statusColeta');
+                                    coleta.dataColeta = docSnap[index].get('dataColeta');
+                                    
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => atualizarColetaScreen(
+                                          preferenciaColeta: coleta.preferenciaColeta.toString(),
+                                          dataColeta: coleta.dataColeta.toString(),
+                                          descricaoColeta: coleta.descricaoColeta.toString(),
+                                          statusColeta: coleta.statusColeta.toString(),
+                                          usuarioId: usuarioId.toString(),
+                                          coletaId: docSnap[index].id,
+                                          
+                                          //preferenciaColeta: coleta.preferenciaColeta.toString(),
+                                        )
+                                      ),
+                                    );
+                                  },
                                 ),
                                 IconButton(
                                   icon: const Icon(
                                     Icons.delete_forever,
                                     size: 30,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    coletaServices.removeColeta(usuarioId, docSnap[index].id);
+                                  },
                                 ),
                               ],
                             ),
                           ],
                         ),
                         subtitle: Text(
-                          (docSnap[index].get('statusColeta') == "A"
+                          (docSnap[index].get('statusColeta') == "a"
                                   ? "Aguardando Agendamento"
-                                  : (docSnap[index].get('statusColeta') == "G")
+                                  : (docSnap[index].get('statusColeta') == "g")
                                       ? "Agendado"
                                       : "Coleta Finalizada") +
                               " --- " +
@@ -74,9 +99,7 @@ class listaColetasAdministracaoScreen extends StatelessWidget {
                                       ? "Preferência: Tarde"
                                       : "Preferência: Ambos") +
                               " --- " +
-                              (docSnap[index].get('dataColeta') == null
-                                  ? "Coleta ainda não agendada"
-                                  : "teste"),
+                              (docSnap[index].get('dataColeta') ?? "Coleta ainda não agendada"),
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),

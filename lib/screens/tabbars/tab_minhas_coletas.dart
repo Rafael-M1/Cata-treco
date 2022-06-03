@@ -38,9 +38,9 @@ class _tabMinhasColetasScreenState extends State<tabMinhasColetasScreen> {
                       title: Text(
                           "Objeto: " + docSnap[index].get('descricaoColeta')),
                       subtitle: Text(
-                        (docSnap[index].get('statusColeta') == "A"
+                        (docSnap[index].get('statusColeta') == "a"
                                 ? "Aguardando Agendamento"
-                                : (docSnap[index].get('statusColeta') == "G")
+                                : (docSnap[index].get('statusColeta') == "g")
                                     ? "Agendado"
                                     : "Coleta Finalizada") +
                             " --- " +

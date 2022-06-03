@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Coleta {
   String? dataColeta;
   String? descricaoColeta;
@@ -28,5 +30,13 @@ class Coleta {
       'statusColeta': statusColeta,
       'preferenciaColeta': preferenciaColeta,
     };
+  }
+
+  Coleta.fromDocument(DocumentSnapshot doc) {
+    //id = doc.id;
+    dataColeta = doc.get('dataColeta') as String;
+    descricaoColeta = doc.get('descricaoColeta') as String;
+    statusColeta = doc.get('statusColeta') as String;
+    preferenciaColeta = doc.get('preferenciaColeta') as String;
   }
 }
